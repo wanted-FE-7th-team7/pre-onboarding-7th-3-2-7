@@ -6,10 +6,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>원티드 프론트엔드 7차</title>
+        <title>원티드 프론트엔드 7차 - 사용자</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>메인 페이지입니다.</div>
+      <div>사용자 목록입니다.</div>
     </>
   );
 }
