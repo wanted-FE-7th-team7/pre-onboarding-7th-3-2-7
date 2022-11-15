@@ -1,0 +1,25 @@
+curl 	-X POST 'http://localhost:4000/users/signup' \
+		-H "Content-Type: application/json" \
+		-d '{"email":"jaeha@yi.com", "password":"1234"}'
+
+
+-----
+
+{
+	"accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImphZWhhQHlpLmNvbSIsImlhdCI6MTY2ODQzMzAwMiwiZXhwIjoxNjY4NDM2NjAyLCJzdWIiOiIxMDEifQ.MulBP7nnkT_dHbibhPk8CYfsA83K3VeM1n8xXE4ifVQ",
+	"user": {
+	  "email": "jaeha@yi.com",
+	  "id": 101
+	}
+  }
+
+
+curl 	-X POST 'http://localhost:4000/login' \
+		-H "Content-Type: application/json" \
+		-d '{"email":"jaeha@yi.com", "password":"1234"}'
+
+
+# 주어진 토큰으로 계좌 정보 조회 테스트
+curl 	-X GET 'http://localhost:4000/accounts' \
+		-H "Content-Type: application/json" \
+		-d '{"Authorization":"Bearer yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImphZWhhQHlpLmNvbSIsImlhdCI6MTY2ODQzMzIxNSwiZXhwIjoxNjY4NDM2ODE1LCJzdWIiOiIxMDEifQ.Wns1ATgkV7aroXMuzg4iz_XfHVkLgsAF-ha8-c3wiko"}'
