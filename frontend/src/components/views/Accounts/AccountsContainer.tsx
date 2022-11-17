@@ -1,8 +1,17 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import Search from "components/common/Search/Search";
+import useInput from "components/common/Search/useInput";
+import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { getAccountStatusName } from "./Accounts.utils";
+import {
+  getAccountStatusName,
+  getBrokerName,
+  getEncryptedNumber,
+  getUserName,
+  seperateNumber,
+} from "./Accounts.utils";
 import { BROKER_INFO } from "./brokerInfo";
 
 type BrokerId = keyof typeof BROKER_INFO;
@@ -22,42 +31,24 @@ interface Accounts {
 }
 
 /*
-
+TODO: 
 - 고객명(user_name) : 고객ID 를 참조하여 실제 이름으로 보여져야 합니다.
     - 고객명을 누를 경우 사용자 상세화면으로 이동합니다.
 
 */
 
-const getItems = (page: number = 0) => {
-  return axios.get<Accounts[]>("/api/accounts", { params: { page } });
+const getItems = (page: number = 0, query: string = "") => {
+  return axios.get<Accounts[]>("/api/accounts", { params: { page, q: query } });
 };
-
-const getEncryptedNumber = (accountNumber: string) =>
-  accountNumber
-    .split("")
-    .reduce(
-      (prev, cur, idx) =>
-        idx === 0 || idx === accountNumber.length - 1
-          ? (prev += cur)
-          : (prev += "*"),
-      ""
-    );
-
-const getBrokerName = (brokerId: BrokerId) => BROKER_INFO[brokerId];
-const getUserName = (accountId: number) => accountId;
-const seperateNumber = (number: string) => Number(number).toLocaleString();
 
 function AccountsContainer() {
   const [page, setPage] = useState(1);
+  const [searchText, handleSearch] = useInput("");
+  const router = useRouter();
   const { data, isLoading, refetch } = useQuery(["accounts"], () =>
-    getItems(page)
+    getItems(page, searchText)
   );
   const accounts = data?.data;
-  const router = useRouter();
-
-  useEffect(() => {
-    refetch();
-  }, [page]);
 
   const decreasePage = () => setPage((page) => (page > 1 ? page - 1 : page));
   const increasePage = () =>
@@ -67,20 +58,40 @@ function AccountsContainer() {
     router.push(`/users/${userId}`);
   };
 
+  const onSearch: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    setPage(1);
+    refetch();
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [page]);
+
   if (isLoading) {
     return <div>로딩중입니다.</div>;
   } else {
     if (accounts) {
       return (
         <div>
-          <div className="flex gap-3">
-            <button className="text-3xl" onClick={decreasePage}>
-              {"<"}
-            </button>
-            <span className="w-5 text-3xl">{page}</span>
-            <button className="text-3xl" onClick={increasePage}>
-              {">"}
-            </button>
+          <div className="flex justify-between p-2">
+            <div className="flex gap-3">
+              <button className="text-3xl" onClick={decreasePage}>
+                {"<"}
+              </button>
+              <span className="w-5 text-3xl">{page}</span>
+              <button className="text-3xl" onClick={increasePage}>
+                {">"}
+              </button>
+            </div>
+
+            <div className="flex gap-3">
+              <Search
+                handleSearch={handleSearch}
+                searchText={searchText}
+                onSearch={onSearch}
+              />
+            </div>
           </div>
 
           <div className="flex">
