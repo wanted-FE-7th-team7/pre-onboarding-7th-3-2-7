@@ -1,4 +1,4 @@
-import { ReactNode, ReactElement, useState } from "react";
+import { ReactNode, ReactElement, useState, useEffect } from "react";
 import type { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
 import { NextPage } from "next";
@@ -11,6 +11,8 @@ import {
   Hydrate,
   QueryClient,
 } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -23,6 +25,13 @@ type AppPropsWithLayout = AppProps & {
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const [queryClient] = useState(() => new QueryClient());
   const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router.pathname !== "/sign-in") {
+      if (!Cookies.get("accessToken")) router.push("sign-in");
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
