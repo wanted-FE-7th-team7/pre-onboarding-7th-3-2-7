@@ -5,6 +5,7 @@ import { useAccessTokenValue } from "stores/accessToken.recoil";
 
 export default function Home() {
   const accessToken = useAccessTokenValue();
+
   return (
     <>
       <Head>

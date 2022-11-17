@@ -23,7 +23,6 @@ export default async function handler(
         }),
       });
       const temp = await result.json();
-      console.log(temp.accessToken);
       res.status(result.status).json({ accessToken: temp.accessToken });
     } catch {
       res.status(404);

@@ -1,8 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import { postSignIn } from "services/sign";
 import { useAccessTokenState } from "stores/accessToken.recoil";
+import Cookies from "js-cookie";
 
 interface Props {}
 function SignInContainer({}: Props) {
@@ -22,7 +22,7 @@ function SignInContainer({}: Props) {
         const {
           data: { accessToken },
         } = await postSignIn(email, password);
-        setAccessToken(accessToken);
+        Cookies.set("accessToken", accessToken);
         router.push("/");
       } catch {
         //TODO: 에러 발생 시 구현
@@ -58,4 +58,4 @@ function SignInContainer({}: Props) {
   );
 }
 
-export { SignInContainer };
+export default SignInContainer;

@@ -1,10 +1,10 @@
-import { SignInContainer } from "components/views/SignIn";
+import SignInContainer from "components/views/SignIn";
 import React from "react";
 
-const SignInPage = () => {
+const SignIn = () => {
   return <SignInContainer />;
 };
 
-SignInPage.getLayout = (page: React.ReactElement) => <>{page}</>;
+SignIn.getLayout = (page: React.ReactElement) => <>{page}</>;
 
-export default SignInPage;
+export default SignIn;
